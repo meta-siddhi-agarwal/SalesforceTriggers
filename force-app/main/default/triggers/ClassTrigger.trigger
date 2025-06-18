@@ -1,14 +1,14 @@
-trigger ClassTrigger on Class__c (before insert,after update) {
+trigger ClassTrigger on Class__c (after update,before delete) {
     if( Trigger.isDelete){
         if(Trigger.isBefore){
-            ClassTriggerHandler.onDelete(Trigger.old);
+            ClassTriggerHelper.beforeDelete(Trigger.old);
         }
     }
     if(Trigger.isUpdate){
         if(Trigger.isAfter){
-            ClassTriggerHandler.onUpdate(Trigger.New, Trigger.oldMap);
+            ClassTriggerHandler.afterUpdate(Trigger.New, Trigger.oldMap);
         }
     }
     }
-
+   
 
