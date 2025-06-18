@@ -1,17 +1,15 @@
-trigger AccountTrigger on Account (after delete,before update,after update) {
-    if(Trigger.isUpdate){
-        if(Trigger.isBefore){
-            AccountTriggerHandler.updateCount(Trigger.new,Trigger.oldMap);
-        }
-        else{
-            AccountTriggerHandler.onInsertUpdate(Trigger.new,Trigger.oldMap);
-            AccountTriggerHandler.updateBillingCity(Trigger.new, Trigger.oldMap);
-        }
-    }
+trigger AccountTrigger on Account (after insert,before update,after update) {
     if(Trigger.isInsert){
         if(Trigger.isAfter){
-            AccountTriggerHandler.onInsertUpdate(Trigger.new,null);
+            AccountTriggerHelper.afterInsert(Trigger.new);
         }
     }
-    
+    if(Trigger.isUpdate){
+        if(Trigger.isBefore){
+            AccountTriggerHelper.beforeUpdate(Trigger.new, Trigger.oldMap);
+        }
+        else{
+            AccountTriggerHelper.afterUpdate(Trigger.new, Trigger.oldMap);
+        }
+    }
 }
