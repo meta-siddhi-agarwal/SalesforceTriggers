@@ -9,7 +9,6 @@ public with sharing class AccountTriggerHandler {
                 acc.Update_Counts__c = acc.Update_Counts__c + 1;
                 accountList.add(acc);
             }
-           
         }
         if(!accountList.isEmpty()){
             update accountList;
@@ -38,22 +37,15 @@ public with sharing class AccountTriggerHandler {
      * update the mailing city whenever billing city is changed
      */
     public static void updateBillingCity(List<Account> accList,Map<Id,Account> oldAccMap){
-    List<Contact> conList=new List<Contact>();
-    Set<Id> accId=new Set<Id>();
-    for(Account acc:accList){
-        if(acc.BillingCity!=oldAccMap.get(acc.Id).BillingCity){
-            accId.add(acc.Id);
-    }
-    if(accId.size()==0)return;
-    Map<Id,Account> AccountList=new Map<Id,Account>([select id ,BillingCity from account WHERE Id In:accId]);//
-    List<Contact> contactList=new List<Contact>([SELECT Id,AccountId FROM Contact WHERE AccountId in:accId]);
+
+    Map<Id,Account> AccountList=new Map<Id,Account>([select id ,BillingCity from account WHERE Id In:oldAccMap.keySet()]);
+    List<Contact> contactList=new List<Contact>([SELECT Id,AccountId FROM Contact WHERE AccountId in:oldAccMap.keySet()]);
 
     for(Contact contacts:contactList){
         contacts.MailingCity=AccountList.get(contacts.AccountId).BillingCity;
-            conList.add(contacts);
     }
-    }
-    if(!conList.isEmpty())
-    update conList;
+    
+    if(!contactList.isEmpty())
+    update contactList;
 }
 }
